@@ -1,5 +1,13 @@
 //! Pink minting traits
 
+use crate::internal::Error;
+use ink::prelude::{string::String as PreludeString, vec::Vec};
+
+use openbrush::{
+    contracts::psp34::extensions::enumerable::*,
+    traits::{AccountId, String},
+};
+
 #[openbrush::wrapper]
 pub type PinkMintRef = dyn PinkMint;
 
