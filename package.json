@@ -35,6 +35,8 @@
     "@polkadot/api-contract": "9.13.4"
   },
   "devDependencies": {
+    "@astar-network/astar-sdk-core": "^0.2.5",
+    "csv-parser-sync-plus-promise": "^1.1.0",
     "ts-node": "^10.9.1"
   }
 }

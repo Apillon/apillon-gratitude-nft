@@ -12,4 +12,7 @@ node_modules/
 types/
 artifacts/
 build/
+output/
+mnemonic.txt
+mint-details.csv
 swanky.log
