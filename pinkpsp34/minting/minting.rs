@@ -40,7 +40,6 @@ impl<T> PinkMint for T
     #[modifiers(only_role(ADMIN))]
     default fn mint(&mut self, to: AccountId, metadata: String) -> Result<Id, Error> {
         self._check_amount(1)?;
-        // self._check_whitelisted(to)?;
         self._check_limit(to)?;
         let minted_id = self._mint(to)?;
 
