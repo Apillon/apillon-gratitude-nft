@@ -27,10 +27,10 @@ async function mint(
     mints: { [key: string]: string }[],
 ) {
     if (!contractAddress) {
-        throw Error('Contract address missing.')
+        return console.error('\nERROR: Contract address missing.')
     }
     if (!wsUrl) {
-        throw Error('RPC websocket URL missing.')
+        return console.error('\nERROR: RPC websocket URL missing.')
     }
     const mintsTotal = mints.length;
     console.log(`\n\nStarting mint:\nNFT COUNT: ${mintsTotal}\nCONTRACT:  ${contractAddress}\nRPC URL:   ${wsUrl}\nPress Enter to continue...`);
