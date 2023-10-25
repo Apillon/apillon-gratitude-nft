@@ -33,7 +33,13 @@ async function mint(
         return console.error('\nERROR: RPC websocket URL missing.')
     }
     const mintsTotal = mints.length;
-    console.log(`\n\nStarting mint:\nNFT COUNT: ${mintsTotal}\nCONTRACT:  ${contractAddress}\nRPC URL:   ${wsUrl}\nPress Enter to continue...`);
+    console.log(`\n\nStarting mint`);
+    console.log('-----------------------------------------------')
+    console.log(`NFT COUNT: ${mintsTotal}`);
+    console.log(`CONTRACT : ${contractAddress}`);
+    console.log(`RPC URL  : ${wsUrl}`);
+    console.log('-----------------------------------------------')
+    console.log(`Press Enter to continue...`);
     await waitForKey(10)
 
     //START MINT
@@ -53,8 +59,8 @@ async function mint(
     let nextNonce = accountInfo.nonce.toNumber();
     for (const mint of mints) {
         const receiverAddress = mint.address.trim();
-        const tokenId = parseInt(mint.tokenId);
-        const tokenUri = mint.tokenUri;
+        const tokenId = parseInt(mint.tokenId.trim());
+        const tokenUri = mint.tokenUri.trim();
         try {
             if (!receiverAddress || !tokenId || !tokenUri) {
                 throw Error(`Some mint data is missing for mint: ${mint}`);
