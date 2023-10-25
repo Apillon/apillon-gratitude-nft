@@ -6,26 +6,37 @@ import {sendTransaction} from '@astar-network/astar-sdk-core';
 import type {ISubmittableResult} from '@polkadot/types/types';
 import parser from 'csv-parser-sync-plus-promise';
 
-const wsUrl = 'wss://rpc.shibuya.astar.network';
+const TESTNET_RPC_URL = 'wss://rpc.shibuya.astar.network';
+const MAINNET_RPC_URL = 'wss://rpc.astar.network';
 const mnemonic = fs.readFileSync('mnemonic.txt').toString().trim();
 const mintInfo = parser.readCsvSync('mint-details.csv');
-const commandArguments = process.argv.slice(2);
 
-//START MINT
+//RUN MINT
 let mintsProcessed = 0;
 let successfullyMinted = 0;
 const failedMintWallets = [];
-mint(commandArguments[0], mintInfo).catch(console.error);
+const commandArguments = process.argv.slice(2);
+const contractAddress = commandArguments[0];
+const wsUrl = commandArguments[1] == 'mainnet' ? MAINNET_RPC_URL : TESTNET_RPC_URL;
+
+mint(contractAddress, wsUrl, mintInfo).catch(console.error);
 
 async function mint(
     contractAddress: string,
+    wsUrl: string,
     mints: { [key: string]: string }[],
 ) {
     if (!contractAddress) {
         throw Error('Contract address missing.')
     }
+    if (!wsUrl) {
+        throw Error('RPC websocket URL missing.')
+    }
     const mintsTotal = mints.length;
-    console.log(`Starting mint for ${mintsTotal} NFTs:`);
+    console.log(`\n\nStarting mint:\nNFT COUNT: ${mintsTotal}\nCONTRACT:  ${contractAddress}\nRPC URL:   ${wsUrl}\nPress Enter to continue...`);
+    await waitForKey(10)
+
+    //START MINT
     const wsProvider = new WsProvider(wsUrl);
     const api = await ApiPromise.create({
         provider: wsProvider,
@@ -118,4 +129,15 @@ function statusHandler(mint: { [key: string]: string }) {
             successfullyMinted += 1;
         }
     };
+}
+
+function waitForKey(keyCode: number) {
+    return new Promise(resolve => {
+        process.stdin.on('data', function (chunk) {
+            if (chunk[0] === keyCode) {
+                resolve(true);
+                process.stdin.pause();
+            }
+        });
+    });
 }
