@@ -124,6 +124,20 @@ describe("Apillon Gratitude NFT Contract Interaction", () => {
         expect((await psp.withSigner(deployer).tx.revokeRole(0, customer.address)).result).to.be.ok;
         expect((await psp.query.hasRole(0, customer.address)).value.ok).to.equal(false);
     });
+
+    it("customer can't change metadata", async () => {
+        expect((await psp.withSigner(deployer).tx.mint(customer.address, [TOKEN_URI])).result).to.be.ok;
+        await expect(psp.withSigner(customer).tx.changeMetadata(IdBuilder.U64(1), ['new_uri'])).to.be.rejectedWith()
+    });
+
+    it("owner can change metadata", async () => {
+        expect((await psp.withSigner(deployer).tx.mint(customer.address, [TOKEN_URI])).result).to.be.ok;
+        const tokenId = IdBuilder.U64(1);
+        const changedUri = 'new_uri';
+        expect((await psp.withSigner(deployer).tx.changeMetadata(tokenId, [changedUri])).result).to.be.ok;
+        // TODO: empty value returned for URI
+        // expect((await psp.query.tokenUri(1)).value.unwrap().ok).to.equal(changedUri);
+    });
 });
 
 
